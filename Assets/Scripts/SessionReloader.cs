@@ -11,8 +11,6 @@ public class SessionReloader : MonoBehaviour
 {
     public ARSession session;
     public GameObject sessionPrefab;
-    //public Button pauseButton;
-    //public Button resumeButton;
     public Button resetButton;
 
     public void ReloadSession()
@@ -34,9 +32,6 @@ public class SessionReloader : MonoBehaviour
 
             // Hook the buttons back up
             resetButton.onClick.AddListener(session.Reset);
-            //pauseButton.onClick.AddListener(() => { session.enabled = false; });
-            //resumeButton.onClick.AddListener(() => { session.enabled = true; });
         }
-
     }
 }

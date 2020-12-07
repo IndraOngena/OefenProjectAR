@@ -17,6 +17,13 @@ public class PlaceOnPlane : MonoBehaviour
     [Tooltip("Instantiates this prefab on a plane at the touch location.")]
     GameObject m_PlacedPrefab;
 
+    [SerializeField]
+    int maxPrefabSpawnCount = 5;
+    int placedPrefabCount;
+
+    ARRaycastManager m_RaycastManager;
+    List<GameObject> placedPrefabList = new List<GameObject>();
+
     /// <summary>
     /// The prefab to instantiate on touch.
     /// </summary>
@@ -30,6 +37,8 @@ public class PlaceOnPlane : MonoBehaviour
     /// The object instantiated as a result of a successful raycast intersection with a plane.
     /// </summary>
     public GameObject spawnedObject { get; private set; }
+
+    static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
 
     void Awake()
     {
@@ -46,7 +55,7 @@ public class PlaceOnPlane : MonoBehaviour
             return true;
         }
 #else
-        if (Input.touchCount > 0)
+        if (Input.GetTouch(0).phase == TouchPhase.Began) //if (Input.touchCount > 0)
         {
             touchPosition = Input.GetTouch(0).position;
             return true;
@@ -68,18 +77,35 @@ public class PlaceOnPlane : MonoBehaviour
             // will be the closest hit.
             var hitPose = s_Hits[0].pose;
 
-            if (spawnedObject == null)
+            //spawnedObject.transform.position = hitPose.position;
+            if (placedPrefabCount < maxPrefabSpawnCount)
             {
-                spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
+                SpawnPrefab(hitPose);
+            }
+
+            /*if (spawnedObject == null)
+            {
+                SpawnPrefab(hitPose);
             }
             else
             {
-                spawnedObject.transform.position = hitPose.position;
-            }
+                if (placedPrefabCount < maxPrefabSpawnCount)
+                {
+                    SpawnPrefab(hitPose);
+                }
+            }*/
         }
     }
 
-    static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
+    public void SetPrefabType(GameObject prefabType)
+    {
+        m_PlacedPrefab = prefabType;
+    }
 
-    ARRaycastManager m_RaycastManager;
+    private void SpawnPrefab(Pose hitPose)
+    {
+        spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
+        placedPrefabList.Add(spawnedObject);
+        placedPrefabCount++;
+    }
 }

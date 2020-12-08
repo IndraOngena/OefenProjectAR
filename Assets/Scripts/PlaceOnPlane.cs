@@ -77,12 +77,12 @@ public class PlaceOnPlane : MonoBehaviour
             // will be the closest hit.
             var hitPose = s_Hits[0].pose;
 
-            //spawnedObject.transform.position = hitPose.position;
             if (placedPrefabCount < maxPrefabSpawnCount)
             {
                 SpawnPrefab(hitPose);
             }
 
+            //before
             /*if (spawnedObject == null)
             {
                 SpawnPrefab(hitPose);
@@ -105,6 +105,7 @@ public class PlaceOnPlane : MonoBehaviour
     private void SpawnPrefab(Pose hitPose)
     {
         spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
+        //spawnedObject.transform.position = hitPose.position;
         placedPrefabList.Add(spawnedObject);
         placedPrefabCount++;
     }
